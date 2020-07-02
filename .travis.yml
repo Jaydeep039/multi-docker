@@ -15,7 +15,7 @@ after_success:
   - docker build -t ccassign/multi-worker ./worker
   - docker build -t ccassign/multi-nginx ./nginx
     #Login to Docker
-  - docker login -u $DOCKER_USER p $DOCKER_PASSWORD
+  - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     #Push all the images
   - docker push ccassign/multi-client
   - docker push ccassign/multi-server

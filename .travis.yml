@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+
+before_install:
+  - docker build -t ccassign/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true ccassign/react-test npm run test -- --coverage
+
+after_success:
+  - docker build -t ccassign/multi-client ./client
+  - docker build -t ccassign/multi-server ./server
+  - docker build -t ccassign/multi-worker ./worker
+  - docker build -t ccassign/multi-nginx ./nginx
+    #Login to Docker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" -password-stdin
+    #Push all the images
+  - docker push ccassign/multi-client
+  - docker push ccassign/multi-server
+  - docker push ccassign/multi-worker
+  - docker push ccassign/multi-nginx
